@@ -1,0 +1,200 @@
+---------------1--------------------
+v_rating int;
+
+Select rating
+Into v_rating
+From Suppliers
+Where supplierid = 4 ;
+
+Update Suppliers 
+Set rating = rating+10
+Where supplierid in
+(
+select supplierid 
+from Suppliers
+where rating < v_rating
+);
+--------------2---------------------
+Create table Products_London
+(productid int);
+
+Insert into Products_London
+((productid)
+
+Select distinct sp.productid 
+From Supplies sp,
+ Products p,
+ Suppliers s
+Where sp.supplierid = s.supplierid 
+And sp.productid = p.productid
+And (p.city = 'London' or 
+          s.city = 'London');
+--------------3
+Delete from Products 
+Where productid not in 
+(
+Select distinct sp.productid 
+From Supplies sp , Products p
+Where sp.productid = p.productid 
+) ;
+--------------4---------------------
+Create table Suppliers_Details
+(supplierid int, detailid  int);
+
+INSERT INTO Suppliers_Details
+(supplierid int, detailid  int)
+
+Select distinct sp.supplierid, sp.detailid 
+From Supplies sp
+Group by sp.supplierid
+Having count (distinct sp.detailid) = 2;
+--------------5---------------------
+Update Supplies sp
+Set quantity = quantity*1,1
+Where sp.detailid in 
+(Select d.detailid
+From Details d
+Where d.color = 'Red'
+);
+
+--------------6---------------------
+Create table Details_color
+(detailid int, color varchar(60), city varchar(60));
+
+Select distinct detailid, color , city
+From Details 
+;
+--------------7---------------------
+Insert into Details_color
+(detailid, color, city)
+
+Select distinct d.detailid,  d.color, d.city 
+From Supplies sp,
+ Details d,
+ Suppliers s,
+ Products p,
+Where sp.supplierid = s.supplierid 
+And sp.detailid  = d.detailid
+And sp.productid = p.productid 
+And (p.city = 'London' or 
+          s.city = 'London');
+--------------8---------------------
+Insert into Suppliers 
+(supplierid, name, rating, city)
+Values 
+(10, 'Whyte', null, 'New York');
+--------------9---------------------
+Delete from Supplies sp
+Where sp.productid in 
+(
+Select p.productid 
+From Products p
+Where p.city = 'Roma'
+)
+;
+Delete from Products 
+where p.city = 'Roma' ;
+--------------10--------------------
+Create table City_all
+(city varchar(60));
+
+INSERT INTO City_all
+
+Select distinct city
+From
+(
+Select city 
+From Suppliers 
+Union all
+Select city
+From Products 
+Union all
+Select city
+From Details 
+)
+Order by city;
+--------------11--------------------
+Update Details 
+Set color = 'Yellow'
+Where color = 'Red'
+And weight < 15;
+--------------12--------------------
+Create table Products_o
+(productid int, city varchar(60));
+
+INSERT INTO Products_o
+
+Select productid, city
+From Products 
+Where right(left(city,2),1) = 'o';
+--------------13--------------------
+v_sum_quantity int;
+
+SELECT AVG (sum_quantity)
+INTO sum_quantity
+
+FROM (
+SELECT sp.supplierid, SUM(quantity) sum_quantity
+FROM Supplies sp
+Group by sp.supplierid
+);
+
+UPDATE Suppliers
+SET rating = rating+10
+WHERE supplierid IN
+(
+SELECT supplierid
+FROM Supplies sp
+Group by sp.supplierid
+Having SUM(sp.quantity) > v_sum_quantity
+);
+--------------14--------------------
+CREATE table Supplier_order
+(supplierid int, name varchar(60));
+
+INSERT INTO Supplier_order
+SELECT distinct s.supplierid, s.name
+FROM Supplies sp,
+     Suppliers s
+WHERE sp.supplierid = s.supplierid
+AND sp.detailid = 1
+ORDER by sp.supplierid;
+--------------15--------------------
+INSERT INTO Suppliers
+ 
+VALUES (7, 'Hue', 20, 'New York'), 
+       (8, 'Farell', 30, 'New York') ; 
+--------------merge-----------------
+CREATE table tmp_Details 
+(detailid int, 
+ name varchar(60), 
+ color varchar(60), 
+ weight int, 
+ city varchar(60));
+
+INSERT INTO tmp_Details (detailid, name, color, weight, city) 
+VALUES (1, 'Screw',         'Blue',     13, 'Osaka');
+
+INSERT INTO tmp_Details (detailid, name, color, weight, city) 
+VALUES (2, 'Bolt',           'Pink', 12, 'Tokio');
+
+INSERT INTO tmp_Details (detailid, name, color, weight, city) 
+VALUES (18, 'Whell-24', 'Red',   14, 'Lviv');
+
+INSERT INTO tmp_Details (detailid, name, color, weight, city) 
+VALUES (19, 'Whell-28', 'Pink',     15, 'London');
+
+MERGE INTO Details t
+USING
+(
+SELECT detailid, name, color, weight, city
+FROM tmp_Details 
+) s
+ON t.detailid = s.detailid  
+    WHEN MATCHED THEN   
+        UPDATE SET t.name = s.name,
+                   t.color = s.color,
+                   t.weight = s.weight,
+                   t.city = s.city   
+    WHEN NOT MATCHED THEN  
+        INSERT (detailid, name, color, weight, city) VALUES (s.detailid, s.name, s.color, s.weight, s.city); 
