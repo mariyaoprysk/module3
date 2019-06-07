@@ -1,0 +1,10 @@
+Create table Suppliers_Details
+(supplierid int, detailid  int);
+
+INSERT INTO Suppliers_Details
+(supplierid int, detailid  int)
+
+Select distinct sp.supplierid, sp.detailid 
+From Supplies sp
+Group by sp.supplierid
+Having count (distinct sp.detailid) = 2;

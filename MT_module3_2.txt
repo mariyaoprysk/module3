@@ -1,0 +1,14 @@
+Create table Products_London
+(productid int);
+
+Insert into Products_London
+((productid)
+
+Select distinct sp.productid 
+From Supplies sp,
+ Products p,
+ Suppliers s
+Where sp.supplierid = s.supplierid 
+And sp.productid = p.productid
+And (p.city = 'London' or 
+          s.city = 'London');

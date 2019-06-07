@@ -1,0 +1,4 @@
+INSERT INTO Suppliers
+ 
+VALUES (7, 'Hue', 20, 'New York'), 
+       (8, 'Farell', 30, 'New York') ;  

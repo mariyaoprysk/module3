@@ -1,0 +1,4 @@
+Update Details 
+Set color = 'Yellow'
+Where color = 'Red'
+And weight < 15;

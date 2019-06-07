@@ -1,0 +1,18 @@
+Create table City_all
+(city varchar(60));
+
+INSERT INTO City_all
+
+Select distinct city
+From
+(
+Select city 
+From Suppliers 
+Union all
+Select city
+From Products 
+Union all
+Select city
+From Details 
+)
+Order by city;

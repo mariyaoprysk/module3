@@ -1,0 +1,8 @@
+Create table Products_o
+(productid int, city varchar(60));
+
+INSERT INTO Products_o
+
+Select productid, city
+From Products 
+Where right(left(city,2),1) = 'o';

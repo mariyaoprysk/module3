@@ -1,0 +1,15 @@
+v_rating int;
+
+Select rating
+Into v_rating
+From Suppliers
+Where supplierid = 4 ;
+
+Update Suppliers 
+Set rating = rating+10
+Where supplierid in
+(
+select supplierid 
+from Suppliers
+where rating < v_rating
+);

@@ -1,0 +1,10 @@
+Delete from Supplies sp
+Where sp.productid in 
+(
+Select p.productid 
+From Products p
+Where p.city = 'Roma'
+)
+;
+Delete from Products 
+where p.city = 'Roma' ;

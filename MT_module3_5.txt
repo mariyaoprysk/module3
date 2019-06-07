@@ -1,0 +1,7 @@
+Update Supplies sp
+Set quantity = quantity*1,1
+Where sp.detailid in 
+(Select d.detailid
+From Details d
+Where d.color = 'Red'
+);

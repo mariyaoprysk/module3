@@ -1,0 +1,34 @@
+CREATE table tmp_Details 
+(detailid int, 
+ name varchar(60), 
+ color varchar(60), 
+ weight int, 
+ city varchar(60));
+
+INSERT INTO tmp_Details (detailid, name, color, weight, city) 
+VALUES (1, 'Screw',         'Blue',     13, 'Osaka');
+
+INSERT INTO tmp_Details (detailid, name, color, weight, city) 
+VALUES (2, 'Bolt',           'Pink', 12, 'Tokio');
+
+INSERT INTO tmp_Details (detailid, name, color, weight, city) 
+VALUES (18, 'Whell-24', 'Red',   14, 'Lviv');
+
+INSERT INTO tmp_Details (detailid, name, color, weight, city) 
+VALUES (19, 'Whell-28', 'Pink',     15, 'London');
+
+MERGE INTO Details t
+USING
+(
+SELECT detailid, name, color, weight, city
+FROM tmp_Details 
+) s
+ON t.detailid = s.detailid  
+    WHEN MATCHED THEN   
+        UPDATE SET t.name = s.name,
+                   t.color = s.color,
+                   t.weight = s.weight,
+                   t.city = s.city   
+    WHEN NOT MATCHED THEN  
+        INSERT (detailid, name, color, weight, city) VALUES (s.detailid, s.name, s.color, s.weight, s.city); 
+

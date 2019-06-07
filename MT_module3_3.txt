@@ -1,0 +1,7 @@
+Delete from Products 
+Where productid not in 
+(
+Select distinct sp.productid 
+From Supplies sp , Products p
+Where sp.productid = p.productid 
+) ;

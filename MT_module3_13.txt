@@ -1,0 +1,20 @@
+v_sum_quantity int;
+
+SELECT AVG (sum_quantity)
+INTO sum_quantity
+
+FROM (
+SELECT sp.supplierid, SUM(quantity) sum_quantity
+FROM Supplies sp
+Group by sp.supplierid
+);
+
+UPDATE Suppliers
+SET rating = rating+10
+WHERE supplierid IN
+(
+SELECT supplierid
+FROM Supplies sp
+Group by sp.supplierid
+Having SUM(sp.quantity) > v_sum_quantity
+);

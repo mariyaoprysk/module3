@@ -1,0 +1,6 @@
+Create table Details_color
+(detailid int, color varchar(60), city varchar(60));
+
+Select distinct detailid, color , city
+From Details 
+;

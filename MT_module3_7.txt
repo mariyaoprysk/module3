@@ -1,0 +1,13 @@
+Insert into Details_color
+(detailid, color, city)
+
+Select distinct d.detailid,  d.color, d.city 
+From Supplies sp,
+ Details d,
+ Suppliers s,
+ Products p,
+Where sp.supplierid = s.supplierid 
+And sp.detailid  = d.detailid
+And sp.productid = p.productid 
+And (p.city = 'London' or 
+          s.city = 'London');

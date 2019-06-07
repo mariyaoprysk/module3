@@ -1,0 +1,10 @@
+CREATE table Supplier_order
+(supplierid int, name varchar(60));
+
+INSERT INTO Supplier_order
+SELECT distinct s.supplierid, s.name
+FROM Supplies sp,
+     Suppliers s
+WHERE sp.supplierid = s.supplierid
+AND sp.detailid = 1
+ORDER by sp.supplierid;

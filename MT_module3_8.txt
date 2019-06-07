@@ -1,0 +1,4 @@
+Insert into Suppliers 
+(supplierid, name, rating, city)
+Values 
+(10, 'Whyte', null, 'New York');
